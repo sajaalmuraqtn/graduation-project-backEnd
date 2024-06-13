@@ -581,6 +581,8 @@ export const adminSignIn = async (req, res,next) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
     const centerProvider=await CenterProviderModel.findOne({ email: email });
+    let token;
+    let refreshToken;
     if (centerProvider) {
         if (!centerProvider.confirmEmail) {
             return next(new Error("please confirm your email!!!",{cause:400}));  
@@ -593,10 +595,10 @@ export const adminSignIn = async (req, res,next) => {
         if (!centerProviderDate) {
             return next(new Error("Your account as center Provider is Expired",{cause:400}));  
         }
-        const token = await jwt.sign({ id: centerProvider._id, role: 'Center',image:centerProvider.image,userName:centerProvider.centerProviderName  ,expiredDate: centerProvider.expiredDate  }, process.env.LOGINSECRET,
+         token = await jwt.sign({ id: centerProvider._id, role: 'Center',image:centerProvider.image,userName:centerProvider.centerProviderName  ,expiredDate: centerProvider.expiredDate  }, process.env.LOGINSECRET,
             {expiresIn:'40m'}
         );
-        const refreshToken = await jwt.sign({ id: centerProvider._id, role: 'Center',image:centerProvider.image,userName:centerProvider.centerProviderName  ,expiredDate: centerProvider.expiredDate  }, process.env.LOGINSECRET, { expiresIn:60*60*24*30 });
+         refreshToken = await jwt.sign({ id: centerProvider._id, role: 'Center',image:centerProvider.image,userName:centerProvider.centerProviderName  ,expiredDate: centerProvider.expiredDate  }, process.env.LOGINSECRET, { expiresIn:60*60*24*30 });
       
         await sendEmail(email, "Logged In Successfully", `<!DOCTYPE html>
         <html>
@@ -712,10 +714,10 @@ export const adminSignIn = async (req, res,next) => {
     if (!match) {
         return next(new Error("data invalid",{cause:400}));  
     }
-    const token = await jwt.sign({ id: user._id, role: user.role, status: user.status,image:user.image,userName:user.userName }, process.env.LOGINSECRET,
+     token = await jwt.sign({ id: user._id, role: user.role, status: user.status,image:user.image,userName:user.userName }, process.env.LOGINSECRET,
         {expiresIn:'40m'}
     );
-    const refreshToken = await jwt.sign({ id: user._id, role: user.role, status: user.status,image:user.image,userName:user.userName  }, process.env.LOGINSECRET, { expiresIn:60*60*24*30 });
+     refreshToken = await jwt.sign({ id: user._id, role: user.role, status: user.status,image:user.image,userName:user.userName  }, process.env.LOGINSECRET, { expiresIn:60*60*24*30 });
     await sendEmail(email, "Logged In Successfully", `<!DOCTYPE html>
     <html>
     <head>
