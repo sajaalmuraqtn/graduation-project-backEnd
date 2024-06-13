@@ -22,7 +22,7 @@ export const getAllCenterProviders = async (req, res, next) => {
     queryObj = queryObj.replace(/\b(gt|gte|lt|lte|in|nin|eq|neq)\b/g, match => `$${match}`);
     queryObj = JSON.parse(queryObj);
 
-    const mongooseQuery = AdvertisementModel.find(queryObj).limit(limit).skip(skip);
+    const mongooseQuery = CenterProviderModel.find(queryObj).limit(limit).skip(skip);
     if (req.query.search) {
         mongooseQuery.find({
             $or: [
@@ -36,9 +36,8 @@ export const getAllCenterProviders = async (req, res, next) => {
         mongooseQuery.select(req.query.fields?.replaceAll(',', ' '))
     }
 
-    const advertisements = await mongooseQuery.sort(req.query.sort?.replaceAll(',', ' ')).populate('Services');
-    const count = await AdvertisementModel.estimatedDocumentCount();
-    return res.status(201).json({ message: 'success', page: advertisements.length, total: count, advertisements });
+    const providersCenter = await mongooseQuery.sort(req.query.sort?.replaceAll(',', ' ')).populate('Advertisements');
+    return res.status(201).json({ message: 'success', total: count, providersCenter });
 
 }
 
@@ -315,12 +314,20 @@ export const getAllAdvertisement = async (req, res, next) => {
     const advertisements = await mongooseQuery.sort(req.query.sort?.replaceAll(',', ' ')).populate('Services');
     const count = await AdvertisementModel.estimatedDocumentCount();
     return res.status(201).json({ message: 'success', page: advertisements.length, total: count, advertisements });
-
+    
 }
+    export const getSpecificCenterProvider = async (req, res, next) => {
+        const centerProvider = await CenterProviderModel.findById(req.params.centerProviderId).populate('Advertisements');
+        if (!centerProvider) {
+            return next(new Error("centerProvider not found", { cause: 404 }));
+        }
+    
+        return res.status(201).json({ message: 'success', centerProvider });
+    }
 
 export const getMyAdvertisement = async (req, res, next) => {
 
-    const advertisements = await AdvertisementModel.find({ 'createdByUser._id': req.user._id }).populate('Advertisement');
+    const advertisements = await AdvertisementModel.find({ 'createdByUser._id': req.user._id }).populate('Services');
 
     return res.status(201).json({ message: 'success', advertisements });
 
@@ -540,7 +547,7 @@ export const createAdvertisement = async (req, res, next) => {
     }
 
     return res.status(201).json({ message: 'success', advertisement });
-}
+    }
 
 export const updateAdvertisement = async (req, res, next) => {
 
