@@ -55,7 +55,7 @@ export const addCenterProvider = async (req, res, next) => {
     })
     let centerProviderName = '';
     if (req.body.centerProviderName) {
-        centerProviderName = req.body.userName.toLowerCase();
+        centerProviderName = req.body.centerProviderName.toLowerCase();
         if (await CenterProviderModel.findOne({ centerProviderName }).select('centerProviderName')) {
             return next(new Error("centerProviderName already exist", { cause: 409 }));
         }
