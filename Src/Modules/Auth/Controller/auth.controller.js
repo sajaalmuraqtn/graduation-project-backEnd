@@ -587,7 +587,7 @@ export const adminSignIn = async (req, res,next) => {
         if (!centerProvider.confirmEmail) {
             return next(new Error("please confirm your email!!!",{cause:400}));  
         }
-        const match = await bcrypt.compareSync(password, user.password);
+        const match = await bcrypt.compareSync(password, centerProvider.password);
         if (!match) {
             return next(new Error("data invalid",{cause:400}));  
         }
