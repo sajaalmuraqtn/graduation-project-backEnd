@@ -37,7 +37,7 @@ export const getAllCenterProviders = async (req, res, next) => {
     }
 
     const providersCenter = await mongooseQuery.sort(req.query.sort?.replaceAll(',', ' ')).populate('Advertisements');
-    return res.status(201).json({ message: 'success', total: count, providersCenter });
+    return res.status(201).json({ message: 'success', providersCenter });
 
 }
 
