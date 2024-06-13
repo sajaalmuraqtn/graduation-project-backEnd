@@ -324,6 +324,14 @@ export const getAllAdvertisement = async (req, res, next) => {
     
         return res.status(201).json({ message: 'success', centerProvider });
     }
+    export const getSpecificCenterProfile = async (req, res, next) => {
+        const centerProvider = await CenterProviderModel.findById(req.user._id).populate('Advertisements');
+        if (!centerProvider) {
+            return next(new Error("centerProvider not found", { cause: 404 }));
+        }
+    
+        return res.status(201).json({ message: 'success', centerProvider });
+    }
 
 export const getMyAdvertisement = async (req, res, next) => {
 

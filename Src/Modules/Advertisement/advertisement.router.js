@@ -14,6 +14,7 @@ router.post('/addCenterProvider', auth(roles.Admin) ,fileUpload(fileValidation.i
 router.put('/updateCenterProvider/:centerProviderId', auth(roles.Center) ,fileUpload(fileValidation.image).single('image'),validation(validators.updateCenterProvider), asyncHandler(AdvertisementController.updateCenterProvider));
 router.patch('/updateCenterProviderExpiredDate/:centerProviderId', auth(roles.Admin) ,validation(validators.updateExpiredDate), asyncHandler(AdvertisementController.updateCenterProviderExpiredDate));
 router.get('/getSpecificProvider/:centerProviderId', auth(endPoint.getall),validation(validators.getSpecificCenterProvider), asyncHandler(AdvertisementController.getSpecificCenterProvider));
+router.get('/getSpecificProviderProfile/profile', auth(roles.Center), asyncHandler(AdvertisementController.getSpecificCenterProfile));
 router.get('/confirmEmail/:token', asyncHandler(AdvertisementController.confirmEmail));
 //////////////////////////////////////////
 router.get('/', auth(endPoint.getall), asyncHandler(AdvertisementController.getAllAdvertisement));
