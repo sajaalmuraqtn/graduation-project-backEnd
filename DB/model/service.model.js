@@ -33,11 +33,7 @@ const ServiceSchema = new Schema({
         _id: { type: Types.ObjectId, ref: 'User',required:true  },
         userName: String
     },
-    updatedByUser: {
-        image: Object,
-        _id: { type: Types.ObjectId, ref: 'User',required:true  },
-        userName: String
-    },
+ 
     isDeleted: {
         type: Boolean, default: false
     }

@@ -5,6 +5,7 @@ import cloudinary from '../../../Services/cloudinary.js';
 import { sendEmail } from '../../../Services/email.js';
  import { customAlphabet, nanoid } from 'nanoid';
 import slugify from 'slugify';
+import CenterProviderModel from '../../../../DB/model/centerProvider.model.js';
 
 export const signUp = async (req, res,next) => {
   
@@ -579,7 +580,128 @@ export const forgotPassword = async (req, res,next) => {
 export const adminSignIn = async (req, res,next) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
-    if (!user || user.role!='Admin') {
+    const centerProvider=await CenterProviderModel.findOne({ email: email });
+    if (centerProvider) {
+        if (!centerProvider.confirmEmail) {
+            return next(new Error("please confirm your email!!!",{cause:400}));  
+        }
+        const match = await bcrypt.compareSync(password, user.password);
+        if (!match) {
+            return next(new Error("data invalid",{cause:400}));  
+        }
+        const centerProviderDate=await CenterProviderModel.findOne({email:email,expiredDate: { $gt: currentDate } });
+        if (!centerProviderDate) {
+            return next(new Error("Your account as center Provider is Expired",{cause:400}));  
+        }
+        const token = await jwt.sign({ id: centerProvider._id, role: 'Center',image:centerProvider.image,userName:centerProvider.centerProviderName  ,expiredDate: centerProvider.expiredDate  }, process.env.LOGINSECRET,
+            {expiresIn:'40m'}
+        );
+        const refreshToken = await jwt.sign({ id: centerProvider._id, role: 'Center',image:centerProvider.image,userName:centerProvider.centerProviderName  ,expiredDate: centerProvider.expiredDate  }, process.env.LOGINSECRET, { expiresIn:60*60*24*30 });
+      
+        await sendEmail(email, "Logged In Successfully", `<!DOCTYPE html>
+        <html>
+        <head>
+            <title></title>
+            <!--[if !mso]><!-- -->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <!--<![endif]-->
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <style type="text/css">
+                #outlook a { padding: 0; }
+                .ReadMsgBody { width: 100%; }
+                .ExternalClass { width: 100%; }
+                .ExternalClass * { line-height: 100%; }
+                body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #fafafa; overflow: hidden; }
+                table, td { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+                p { display: block; margin: 13px 0; }
+            </style>
+            <!--[if !mso]><!-->
+            <style type="text/css">
+                @media only screen and (max-width:480px) {
+                    @-ms-viewport { width: 320px; }
+                    @viewport { width: 320px; }
+                }
+            </style>
+            <!--<![endif]-->
+            <!--[if mso]>
+            <xml>
+                <o:OfficeDocumentSettings>
+                    <o:AllowPNG/>
+                    <o:PixelsPerInch>96</o:PixelsPerInch>
+                </o:OfficeDocumentSettings>
+            </xml>
+            <![endif]-->
+            <!--[if lte mso 11]>
+            <style type="text/css">
+                .outlook-group-fix { width:100% !important; }
+            </style>
+            <![endif]-->
+            <!--[if !mso]><!-->
+            <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet" type="text/css">
+            <style type="text/css">
+                @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);
+            </style>
+            <!--<![endif]-->
+            <style type="text/css">
+                @media only screen and (min-width:480px) {
+                    .mj-column-per-100, *[aria-labelledby="mj-column-per-100"] { width: 100% !important; }
+                }
+            </style>
+        </head>
+        <body style="background-color: #fafafa; overflow: hidden;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="overflow: hidden;">
+                <tr>
+                    <td>
+                        <div style="margin:0px auto;max-width:640px;background:#fafafa; overflow: hidden;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fafafa;" align="center" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;">
+                                            <div style="margin:0px auto;max-width:640px;background:#fafafa;">
+                                                <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fafafa;" align="center" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 40px;">
+                                                                <div aria-labelledby="mj-column-per-100" class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
+                                                                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="word-break:break-word;font-size:0px;padding:0px 0px 10px;" align="left">
+                                                                                    <div style="cursor:auto; font-family:Whitney, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:14px;line-height:22px;text-align:center;">
+                                                                                        <p><img src="https://res.cloudinary.com/dnkdk0ddu/image/upload/v1716562329/SkinElegance-Shop/nrjct9sjh2m4o1dtumg8.png" alt="Party Wumpus" title="None" width="250" style="height: auto;"></p>
+                                                                                        <div style="text-align:start;">
+                                                                                            <h2 style="font-family: Whitney, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-weight: 500;font-size: 18px;color: #4F545C;letter-spacing: 0.27px;">Hi ${user.userName} Admin</h2>
+                                                                                            <p>Welcome Back to Skin Elegance DashBoard! We're thrilled to have you join our community of skin care enthusiasts. To start exploring the best in skin care products</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div><!--[if mso | IE]>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    <![endif]-->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        </table>
+        </body>
+        </html>`);
+    }
+    else{
+      if (!user || user.role!='Admin') {
         return next(new Error("data invalid",{cause:400}));  
     }
  
@@ -694,7 +816,9 @@ export const adminSignIn = async (req, res,next) => {
     </tr>
     </table>
     </body>
-    </html>`);
+    </html>`);  
+    }
+    
     
     return res.status(201).json({ message: 'success', token, refreshToken })
 }

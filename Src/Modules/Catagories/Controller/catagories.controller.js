@@ -129,8 +129,7 @@ export const updateCategory = async (req, res, next) => {
         }
         category.name = name;
         category.slug = slugify(name);
-        await SubCategoryModel.updateMany({ categoryId }, { categoryName: category.name, updatedByUser });
-        await ProductModel.updateMany({ categoryId }, { categoryName: category.name, updatedByUser });
+         await ProductModel.updateMany({ categoryId }, { categoryName: category.name, updatedByUser });
 
     }
 

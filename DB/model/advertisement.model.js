@@ -29,9 +29,7 @@ const AdvertisementSchema = new Schema({
     status: {
         type: String, enum: ['Active', 'Inactive'], default: 'Active'
     }, 
-    expiredDate: {
-        type: Date, required: true
-    },
+
     isDeleted: {
         type: Boolean, default: false
     },
@@ -40,11 +38,7 @@ const AdvertisementSchema = new Schema({
         _id: { type: Types.ObjectId, ref: 'User',required:true  },
         userName: String
     },
-    updatedByUser: {
-        image: Object,
-        _id: { type: Types.ObjectId, ref: 'User',required:true  },
-        userName: String
-    },
+   
     city:{
         type:String,
         enum:['Hebron','Nablus','Jerusalem','Ramallah','Tulkarm',"Jenin","Al-Bireh","Jericho","Yatta","Beit Jala"]

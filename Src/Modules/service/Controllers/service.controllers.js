@@ -6,6 +6,7 @@ import UserModel from "../../../../DB/model/user.model.js";
 import ServiceModel from "../../../../DB/model/service.model.js";
 import AdvertisementModel from "../../../../DB/model/advertisement.model.js";
 import { sendEmail } from "../../../Services/email.js";
+import CenterProviderModel from "../../../../DB/model/centerProvider.model.js";
 
 export const getAllServices = async (req, res, next) => {
     const services = await ServiceModel.find({ advertisementId: req.params.advertisementId });
@@ -46,20 +47,21 @@ export const createService = async (req, res, next) => {
         folder: `${process.env.APP_NAME}/Services`
     })
     req.body.mainImage = { secure_url, public_id };
-    const user = await UserModel.findById(req.user._id);
+    const centerProvider = await CenterProviderModel.findById(req.user._id);
     const createdByUser = {
-        userName: user.userName,
-        image: user.image,
-        _id: user._id
+        userName: centerProvider.centerProviderName,
+        image: centerProvider.image,
+        _id: centerProvider._id
     }
     const updatedByUser = {
-        userName: user.userName,
-        image: user.image,
-        _id: user._id
+        userName: centerProvider.centerProviderName,
+        image: centerProvider.image,
+        _id: centerProvider._id
     }
 
     req.body.createdByUser = createdByUser;
     req.body.updatedByUser = updatedByUser;
+
     const service = await ServiceModel.create(req.body);
     if (!service) {
         return next(new Error("error while creating service", { cause: 400 }));
@@ -258,15 +260,16 @@ export const updateService = async (req, res, next) => {
     }
 
 
-    const user = await UserModel.findById(req.user._id);
+    const centerProvider = await CenterProviderModel.findById(req.user._id);
 
     const updatedByUser = {
-        userName: user.userName,
-        image: user.image,
-        _id: user._id
+        userName: centerProvider.centerProviderName,
+        image: centerProvider.image,
+        _id: centerProvider._id
     }
+
     service.updatedByUser = updatedByUser;
-    await service.save()
+        await service.save()
 
     return res.status(201).json({ message: 'success', service });
 }
@@ -288,14 +291,15 @@ export const restoreService = async (req, res, next) => {
     if (checkAdvertisement.isDeleted || checkAdvertisement.status == "Inactive") {
         return next(new Error("can not restore this service Advertisement not available", { cause: 400 }));
     }
-    const user = await UserModel.findById(req.user._id);
+    const centerProvider = await CenterProviderModel.findById(req.user._id);
 
     const updatedByUser = {
-        userName: user.userName,
-        image: user.image,
-        _id: user._id
+        userName: centerProvider.centerProviderName,
+        image: centerProvider.image,
+        _id: centerProvider._id
     }
-    const service = await ServiceModel.findByIdAndUpdate(req.params.serviceId, { isDeleted: false, status: 'Active', updatedByUser: updatedByUser }, { new: true });
+
+    const service = await ServiceModel.findByIdAndUpdate(req.params.serviceId, { isDeleted: false, status: 'Active',updatedByUser}, { new: true });
     return res.status(201).json({ message: 'success', service });
 }
 
@@ -305,14 +309,16 @@ export const softDeleteService = async (req, res, next) => {
         return next(new Error("service not found", { cause: 404 }));
     }
 
-    const user = await UserModel.findById(req.user._id);
+    const centerProvider = await CenterProviderModel.findById(req.user._id);
 
     const updatedByUser = {
-        userName: user.userName,
-        image: user.image,
-        _id: user._id
+        userName: centerProvider.centerProviderName,
+        image: centerProvider.image,
+        _id: centerProvider._id
     }
-    const service = await ServiceModel.findByIdAndUpdate(req.params.serviceId, { isDeleted: true, status: 'Inactive', updatedByUser: updatedByUser }, { new: true });
+
+
+    const service = await ServiceModel.findByIdAndUpdate(req.params.serviceId, { isDeleted: true, status: 'Inactive',updatedByUser}, { new: true });
     return res.status(201).json({ message: 'success', service });
 }
 
