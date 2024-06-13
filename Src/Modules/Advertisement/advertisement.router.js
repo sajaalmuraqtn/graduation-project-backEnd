@@ -12,7 +12,7 @@ router.use('/:advertisementId/services',validation(validators.getSpecificAdverti
 router.get('/getAllCenterProviders', auth(roles.Admin), asyncHandler(AdvertisementController.getAllCenterProviders));
 router.post('/addCenterProvider', auth(roles.Admin) ,fileUpload(fileValidation.image).single('image'), asyncHandler(AdvertisementController.addCenterProvider));
 router.put('/updateCenterProvider/:centerProviderId', auth(roles.Center) ,fileUpload(fileValidation.image).single('image'),validation(validators.updateCenterProvider), asyncHandler(AdvertisementController.updateCenterProvider));
-router.patch('/updateCenterProviderExpiredDate/:centerProviderId', auth(roles.Admin) ,fileUpload(fileValidation.image).single('image'),validation(validators.updateCenterProvider), asyncHandler(AdvertisementController.updateCenterProviderExpiredDate));
+router.patch('/updateCenterProviderExpiredDate/:centerProviderId', auth(roles.Admin) ,validation(validators.updateExpiredDate), asyncHandler(AdvertisementController.updateCenterProviderExpiredDate));
 router.get('/getSpecificProvider/:centerProviderId', auth(endPoint.getall),validation(validators.getSpecificCenterProvider), asyncHandler(AdvertisementController.getSpecificCenterProvider));
 router.get('/confirmEmail/:token', asyncHandler(AdvertisementController.confirmEmail));
 //////////////////////////////////////////
