@@ -675,7 +675,7 @@ export const adminSignIn = async (req, res,next) => {
                                                                                     <div style="cursor:auto; font-family:Whitney, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:14px;line-height:22px;text-align:center;">
                                                                                         <p><img src="https://res.cloudinary.com/dnkdk0ddu/image/upload/v1716562329/SkinElegance-Shop/nrjct9sjh2m4o1dtumg8.png" alt="Party Wumpus" title="None" width="250" style="height: auto;"></p>
                                                                                         <div style="text-align:start;">
-                                                                                            <h2 style="font-family: Whitney, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-weight: 500;font-size: 18px;color: #4F545C;letter-spacing: 0.27px;">Hi ${user.userName} Admin</h2>
+                                                                                            <h2 style="font-family: Whitney, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-weight: 500;font-size: 18px;color: #4F545C;letter-spacing: 0.27px;">Hi ${centerProvider.centerProviderName} Admin</h2>
                                                                                             <p>Welcome Back to Skin Elegance DashBoard! We're thrilled to have you join our community of skin care enthusiasts. To start exploring the best in skin care products</p>
                                                                                         </div>
                                                                                     </div>
