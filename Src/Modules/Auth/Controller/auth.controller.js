@@ -591,6 +591,8 @@ export const adminSignIn = async (req, res,next) => {
         if (!match) {
             return next(new Error("data invalid",{cause:400}));  
         }
+        const currentDate = new Date();
+
         const centerProviderDate=await CenterProviderModel.findOne({email:email,expiredDate: { $gt: currentDate } });
         if (!centerProviderDate) {
             return next(new Error("Your account as center Provider is Expired",{cause:400}));  
