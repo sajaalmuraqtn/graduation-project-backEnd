@@ -13,7 +13,7 @@ router.get('/getAllCenterProviders', auth(roles.Admin), asyncHandler(Advertiseme
 router.post('/addCenterProvider', auth(roles.Admin) ,fileUpload(fileValidation.image).single('image'), asyncHandler(AdvertisementController.addCenterProvider));
 router.put('/updateCenterProvider/:centerProviderId', auth(roles.Center) ,fileUpload(fileValidation.image).single('image'),validation(validators.updateCenterProvider), asyncHandler(AdvertisementController.updateCenterProvider));
 router.patch('/updateCenterProviderExpiredDate/:centerProviderId', auth(roles.Admin) ,fileUpload(fileValidation.image).single('image'),validation(validators.updateCenterProvider), asyncHandler(AdvertisementController.updateCenterProviderExpiredDate));
-router.post('/getSpecificProvider/:centerProviderId', auth(endPoint.getall),validation(validators.getSpecificCenterProvider), asyncHandler(AdvertisementController.getSpecificCenterProvider));
+router.get('/getSpecificProvider/:centerProviderId', auth(endPoint.getall),validation(validators.getSpecificCenterProvider), asyncHandler(AdvertisementController.getSpecificCenterProvider));
 router.get('/confirmEmail/:token', asyncHandler(AdvertisementController.confirmEmail));
 //////////////////////////////////////////
 router.get('/', auth(endPoint.getall), asyncHandler(AdvertisementController.getAllAdvertisement));
