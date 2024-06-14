@@ -40,7 +40,7 @@ router.post('/addCenterProvider', auth(roles.Admin) ,fileUpload(fileValidation.i
 router.put('/updateCenterProvider/:centerProviderId', auth(roles.Admin) ,fileUpload(fileValidation.image).single('image'),validation(validators.updateCenterProvider), asyncHandler(AdvertisementController.updateCenterProvider));
 router.patch('/updateCenterProviderExpiredDate/:centerProviderId', auth(roles.Admin) ,validation(validators.updateExpiredDate), asyncHandler(AdvertisementController.updateCenterProviderExpiredDate));
 router.get('/getSpecificProvider/:centerProviderId', auth(endPoint.getall),validation(validators.getSpecificCenterProvider), asyncHandler(AdvertisementController.getSpecificCenterProvider));
-router.get('/getMyAdvertisements',auth(roles.Admin), asyncHandler(AdvertisementController.getActiveAdvertisement));
+router.get('/getMyAdvertisements',auth(roles.Admin), asyncHandler(AdvertisementController.getMyAdvertisement));
 //////////////////////////////////
 router.get('/', auth(roles.Admin), asyncHandler(AdvertisementController.getAllAdvertisement));
 router.get('/:advertisementId', validation(validators.getSpecificAdvertisement), asyncHandler(AdvertisementController.getSpecificAdvertisement));
