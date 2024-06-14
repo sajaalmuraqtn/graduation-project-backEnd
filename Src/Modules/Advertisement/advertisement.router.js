@@ -31,6 +31,7 @@ import fileUpload, { fileValidation } from "../../Services/multer.js";
 import { asyncHandler } from "../../Services/errorHandling.js";
 import { validation } from "../../Middleware/validation.js";
 import * as validators from './advertisement.validation.js'
+import { endPoint } from "./advertisment.endpoint.js";
 const router = Router()
 router.use('/:advertisementId/services',validation(validators.getSpecificAdvertisement),ServiceRouter);
 /////////////////////
